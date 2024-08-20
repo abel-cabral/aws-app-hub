@@ -70,14 +70,14 @@ docker stop <container_id>
 ### Deploy dos Containers para o Cluster
 Para fazer o deploy dos containers utilizando um arquivo docker-compose.yml para um cluster Docker Stack:
 ```bash
-docker stack deploy -c docker-compose.yml abelCluster
+docker stack deploy -c docker-compose.yml service-name
 ```
 
 ### Interromper Serviços no Cluster
 Para listar e remover serviços específicos em execução no cluster Docker:
 ```bash
 docker service ls
-docker service rm servico1 servico2 servico3
+docker stack rm service-name
 ```
 
 ## NGINX

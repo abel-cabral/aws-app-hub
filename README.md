@@ -1,36 +1,26 @@
-# Guia de Comandos Essenciais
+# Hub de Aplicações em AWS EC2
+Este projeto tem como objetivo criar um hub de aplicações utilizando uma instância AWS EC2 com a imagem Amazon Linux 2023. O guia a seguir foi desenvolvido para ajudar desenvolvedores que precisam testar suas aplicações em um ambiente de servidor acessível, contínuo e sem custo adicional. A proposta é oferecer uma solução prática para manter serviços rodando 24 horas por dia, sem a necessidade de desligar a instância, garantindo a continuidade dos testes e desenvolvimentos. Basicamente dicas de como gerencias um "cluster" em uma instancia EC2 na AWS, permitindo ter varios serviços rodando na versão grátis (750 horas) da AWS.
 
-Este guia contém comandos úteis para gerenciamento de recursos de memória no Linux, gerenciamento de containers Docker, manipulação de serviços Docker Stack, reinicialização do servidor NGINX e instalação e gerenciamento de certificados SSL. Basicamente dicas de como gerencias um "cluster" em uma instancia EC2 na AWS, permitindo ter varios serviços rodando na versão grátis (750 horas) da AWS.
+## Comandos Úteis
+Abaixo estão listados comandos essenciais para o gerenciamento e manutenção da sua instância EC2 e dos serviços Docker.
 
-## Índice
-- [Linux](#linux)
-  - [Ver Recursos de Memória Disponível](#ver-recursos-de-memória-disponível)
-- [Docker](#docker)
-  - [Limpar Todos os Caches e Dados](#limpar-todos-os-caches-e-dados)
-  - [Comandos Básicos do Docker](#comandos-básicos-do-docker)
-  - [Docker Stack](#docker-stack)
-    - [Deploy dos Containers para o Cluster](#deploy-dos-containers-para-o-cluster)
-    - [Interromper Serviços no Cluster](#interromper-serviços-no-cluster)
-- [NGINX](#nginx)
-  - [Reiniciar Servidor](#reiniciar-servidor)
-- [Certificados SSL](#certificados-ssl)
-  - [Instalação](#instalação)
-  - [Obter Certificados](#obter-certificados)
-  - [Renovação Automática](#renovação-automática)
-- [Práticas Recomendadas](#práticas-recomendadas)
+### Reiniciar a Instância
+Para reiniciar a instância EC2 sem perder o IP público, o que pode acontecer ao reiniciar via painel da AWS, utilize o seguinte comando:
+```bash
+sudo reboot
+```
+Isso é útil para atualizar ou instalar pacotes sem precisar reconfigurar serviços que dependem do IP público.
 
-## Linux
 
-### Ver Recursos de Memória Disponível
-Para verificar a quantidade de memória disponível no sistema, utilize o comando abaixo:
+### Verificar Memória Disponível
+Para verificar a quantidade de memória disponível no sistema, utilize:
 ```bash
 free -h
 ```
 
-## Docker
 
-### Limpar Todos os Caches e Dados
-Para parar todos os containers em execução, remover todos os containers, imagens e volumes do Docker, execute:
+### Limpeza de Caches e Dados do Docker
+Para limpar todos os caches e dados do Docker, incluindo containers parados, imagens e volumes, utilize:
 ```bash
 docker stop $(docker ps -q) || true
 docker rm $(docker ps -a -q) || true
@@ -42,104 +32,51 @@ sudo rm -rf /var/lib/docker/containers/*/*.log
 sudo rm -rf /var/lib/docker
 ```
 
-### Comandos Básicos do Docker
 
-Aqui estão alguns comandos básicos do Docker para gerenciamento diário:
-•	Listar todos os containers em execução:
+### Verificar Armazenamento Disponível
+Para exibir a quantidade de armazenamento do sistema, o que foi usado e o que está disponível, use:
 ```bash
-docker ps
+df -h
 ```
 
-•	Listar todos os containers (incluindo os que estão parados):
-```bash
-docker ps -a
-```
 
-•	Iniciar um container:
-```bash
-docker start <container_id>
-```
-
-•	Parar um container:
-```bash
-docker stop <container_id>
-```
-
-## Docker Stack
-
-### Deploy dos Containers para o Cluster
-Para fazer o deploy dos containers utilizando um arquivo docker-compose.yml para um cluster Docker Stack:
+### Gerenciamento de Docker Stack
+Para fazer o deploy dos containers utilizando um arquivo docker-compose.yml para um cluster Docker Stack, utilize:
 ```bash
 docker stack deploy -c docker-compose.yml service-name
 ```
 
-### Interromper Serviços no Cluster
-Para listar e remover serviços específicos em execução no cluster Docker:
+Para remover um serviço específico no cluster Docker Stack:
 ```bash
-docker service ls
 docker stack rm service-name
 ```
 
-## NGINX
 
-### Reiniciar Servidor
-Para reiniciar o servidor NGINX, utilize o comando:
+### Build e Deploy de Imagens Docker
+#### Build Universal de Imagem Docker:
+Para construir uma imagem Docker universalmente compatível (incluindo arquiteturas ARM e x86-64):
 ```bash
-sudo systemctl restart nginx
+docker buildx build --platform linux/amd64,linux/arm64 -t username/my-repository:latest .
 ```
 
-## Certificados SSL
-
-### Instalação
-Para instalar o Certbot e o plugin NGINX, execute:
+#### Login no Docker Hub:
 ```bash
-sudo apt update
-sudo apt install certbot python3-certbot-nginx -y
+docker login
 ```
 
-### Obter Certificados
-Para obter certificados SSL para o seu domínio utilizando o Certbot com NGINX:
+#### Fazer Push da Imagem para o Docker Hub:
 ```bash
-sudo certbot --nginx -d example.com
-```
-
-### Renovação Automática
-Para testar a renovação automática dos certificados SSL:
-```bash
-sudo certbot renew --dry-run
-```
-
-## Práticas Recomendadas
-
-### Backup Regular
-Certifique-se de realizar backups regulares dos seus dados e configurações. Use ferramentas como rsync para backups incrementais.
-
-### Monitoramento de Sistema
-Implemente ferramentas de monitoramento como Prometheus e Grafana para acompanhar o desempenho e a saúde do seu sistema e containers.
-
-### Segurança
-•	Firewall: Configure um firewall usando ufw ou iptables para restringir o acesso a serviços.
-
-•	Atualizações: Mantenha seu sistema e pacotes sempre atualizados com sudo apt update && sudo apt upgrade.
-
-### Documentação
-Mantenha uma documentação detalhada de todos os processos e configurações para facilitar a manutenção e troubleshooting.
-
-### DOCKER HUB
-Efetue login na plataforma via terminal
-
-#### Construa a imagem com a tag baseada na data e hora
-````bash
-docker build -t username/my-repository:latest .
-````
-#### Envia a imagem para o Docker Hub
-````bash
 docker push username/my-repository:latest
-````
-
-docker build -t ozteps/cardsage-api:latest . && docker push ozteps/cardsage-api:latest
+```
 
 
+### Monitoramento e Diagnóstico
+Monitorar o Uso de Recursos dos Containers:
+```bash
+docker stats
+```
 
-# Estatisticas
-docker stats (Para ver quantidade de memoria e processador gasto em cada container)
+Verificar o Status dos Serviços Docker Stack:
+```bash
+docker service ls
+```

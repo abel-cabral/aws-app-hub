@@ -56,7 +56,7 @@ docker stack rm service-name
 #### Build Universal de Imagem Docker:
 Para construir uma imagem Docker universalmente compatível (incluindo arquiteturas ARM e x86-64):
 ```bash
-docker buildx build --platform linux/amd64,linux/arm64 -t username/my-repository:latest .
+docker buildx build --platform linux/amd64 -t username/my-repository:latest .
 ```
 
 #### Login no Docker Hub:

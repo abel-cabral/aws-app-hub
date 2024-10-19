@@ -1,6 +1,11 @@
 #!/bin/bash
 
-# Define a variável HOME
+# Defina a variável CREDENCIAL
+export CREDENCIAL=123456781
+
+# Define as variáveis de uso
+export VERSION="1.0.3"
+export APP_NAME="aws-app-hub-api"
 export HOME=/home/ec2-user
 
 # Atualiza o sistema e instala as dependências necessárias
@@ -27,12 +32,12 @@ sudo mkswap /swapfile
 sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
-# Define a variável de versão e o nome da pasta
-VERSION="1.0.3"
-APP_NAME="aws-app-hub-api"
-
 # Muda para o diretório do usuário padrão (ec2-user)
 cd /home/ec2-user || exit
+
+# Salvado senha de validacao de acesso
+echo "export CHAVE_DE_ACESSO=\"$CREDENCIAL\"" >> ~/.bashrc
+source ~/.bashrc
 
 # Baixa o arquivo zip da release
 curl -L -o "${APP_NAME}.zip" "https://github.com/abel-cabral/abel-dockManager/releases/download/v${VERSION}/v${VERSION}.zip"

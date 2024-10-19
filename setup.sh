@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Define a variável HOME
+export HOME=/home/ec2-user
+
 # Atualiza o sistema e instala as dependências necessárias
 sudo dnf update -y
 
@@ -25,7 +28,7 @@ sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
 # Define a variável de versão e o nome da pasta
-VERSION="1.0.2"
+VERSION="1.0.3"
 APP_NAME="aws-app-hub-api"
 
 # Muda para o diretório do usuário padrão (ec2-user)
@@ -43,11 +46,9 @@ unzip "${APP_NAME}.zip" -d "${APP_NAME}"
 # Deleta o zip que foi extraido
 rm -rf "${APP_NAME}.zip"
 
-# Navega até o diretório da aplicação
-cd "${APP_NAME}" || exit
-
 # Inicia a aplicação com PM2, limitando o uso de memória a 70 MB
-pm2 start ./app.js --name "${APP_NAME}" --max-memory-restart 70M
+pm2 start "/home/ec2-user/${APP_NAME}/app.js" --name "${APP_NAME}" --max-memory-restart 70M
+sudo chown ec2-user:ec2-user /home/ec2-user/.pm2/rpc.sock /home/ec2-user/.pm2/pub.sock
 
 # Configura o PM2 para iniciar no boot do sistema
 pm2 startup systemd

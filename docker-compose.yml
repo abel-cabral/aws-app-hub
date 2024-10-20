@@ -3,7 +3,7 @@ version: "3.8"
 services:
   ##########################################################################################
   #                                                                                        #
-  #                                SERVIÇOS COMPLEMENTARES                                 #
+  #                                SERVIÇOS OBRIGATÓRIOS                                   #
   #                                                                                        #
   ##########################################################################################
   
@@ -33,7 +33,7 @@ services:
 
   # CONFIGURA O PROXY REVERSO PARA PERMITIR O USO DE SUBDOMÍNIOS NA PORTA 80
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     ports:
       - "80:80"
     volumes:

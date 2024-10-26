@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Defina a variável CREDENCIAL
-export CREDENCIAL=123456781
+# Defina a variável CREDENCIAL, voce deve passar o valor desse atributo no header de suas requisições {"credencial": "123456781"}
+export CREDENCIAL=969369662
+echo -n "$CREDENCIAL" > credencial.txt
 
 # Define as variáveis de uso
-export VERSION="1.0.3"
+export VERSION="1.1.0"
 export APP_NAME="aws-app-hub-api"
 export HOME=/home/ec2-user
 
@@ -52,17 +53,17 @@ unzip "${APP_NAME}.zip" -d "${APP_NAME}"
 rm -rf "${APP_NAME}.zip"
 
 # Inicia a aplicação com PM2, limitando o uso de memória a 70 MB
-pm2 start "/home/ec2-user/${APP_NAME}/app.js" --name "${APP_NAME}" --max-memory-restart 70M
+sudo pm2 start "/home/ec2-user/${APP_NAME}/app.js" --name "${APP_NAME}" --max-memory-restart 70M
 sudo chown ec2-user:ec2-user /home/ec2-user/.pm2/rpc.sock /home/ec2-user/.pm2/pub.sock
 
 # Configura o PM2 para iniciar no boot do sistema
-pm2 startup systemd
+sudo pm2 startup systemd
 
 # Salva a configuração atual do PM2
-pm2 save
+sudo pm2 save
 
 # Exibe o status do PM2
-pm2 status
+sudo pm2 status
 
 # Reinicia a sessão do usuário para garantir que o grupo docker seja atualizado
 newgrp docker

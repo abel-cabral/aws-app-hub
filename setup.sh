@@ -39,7 +39,7 @@ cd "$HOME" || exit
 echo -n "$CREDENCIAL" > credencial.txt
 
 # Baixa o arquivo zip da release
-curl -L -o "${APP_NAME}.zip" "https://github.com/abel-cabral/abel-dockManager/releases/download/v${VERSION}/v${VERSION}.zip"
+curl -L -o "${APP_NAME}.zip" "https://github.com/abel-cabral/aws-app-hub-api/releases/download/v${VERSION}/v${VERSION}.zip"
 if [ $? -ne 0 ]; then
     echo "Erro ao baixar o arquivo da release. Verifique a URL."
     exit 1

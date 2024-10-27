@@ -77,13 +77,14 @@ fi
 # Deleta o zip que foi extraído
 rm -f "${APP_NAME}.zip"
 
-# Verifica e corrige permissões da pasta .pm2
-echo "Corrigindo permissões da pasta .pm2..."
-sudo chown -R ec2-user:ec2-user /home/ec2-user/.pm2
-
 # Inicia a aplicação com PM2, limitando o uso de memória a 70 MB
 pm2 start "$HOME/${APP_NAME}/app.js" --name "${APP_NAME}" --max-memory-restart 70M
+
+# Corrige as permissões da pasta .pm2 (ajuste as permissões para o rpc.sock e pub.sock)
 sudo chown ec2-user:ec2-user "$HOME/.pm2/rpc.sock" "$HOME/.pm2/pub.sock"
+
+# Garante que o usuário ec2-user tenha propriedade total sobre a pasta .pm2
+sudo chown -R ec2-user:ec2-user /home/ec2-user/.pm2
 
 # Configura o PM2 para iniciar no boot do sistema
 pm2 startup systemd -u ec2-user --hp "$HOME"

@@ -35,7 +35,7 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 cd "$HOME" || exit
 
 # Salvando senha de validação de acesso de forma segura
-echo -n "$CREDENCIAL" > credencial.txt
+echo -n "$CREDENCIAL" > ${APP_NAME}/credencial.txt
 
 # Obtém o link do arquivo zip da última release via API do GitHub
 echo "Obtendo o link da última versão da release via API do GitHub..."

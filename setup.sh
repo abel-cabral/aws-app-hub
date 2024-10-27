@@ -34,9 +34,6 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 # Muda para o diretório do usuário padrão (ec2-user)
 cd "$HOME" || exit
 
-# Salvando senha de validação de acesso de forma segura
-echo -n "$CREDENCIAL" > ${APP_NAME}/credencial.txt
-
 # Obtém o link do arquivo zip da última release via API do GitHub
 echo "Obtendo o link da última versão da release via API do GitHub..."
 DOWNLOAD_URL=$(curl -s https://api.github.com/repos/abel-cabral/${APP_NAME}/releases/latest | grep "browser_download_url.*zip" | cut -d '"' -f 4)
@@ -65,6 +62,9 @@ fi
 
 # Cria a pasta do aplicativo se não existir
 mkdir -p "${APP_NAME}"
+
+# Salvando senha de validação de acesso de forma segura
+echo -n "$CREDENCIAL" > "${APP_NAME}/credencial.txt"
 
 # Extrai o conteúdo do zip para a pasta do aplicativo
 echo "Extraindo o conteúdo do arquivo zip..."

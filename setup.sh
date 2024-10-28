@@ -60,6 +60,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Salvando senha de validação de acesso de forma segura
+echo -n "$CREDENCIAL" > "credencial.txt"
+
 # Cria a pasta do aplicativo se não existir
 mkdir -p "${APP_NAME}"
 
@@ -89,9 +92,6 @@ pm2 save
 
 # Exibe o status do PM2
 pm2 status
-
-# Salvando senha de validação de acesso de forma segura
-echo -n "$CREDENCIAL" > "${APP_NAME}/credencial.txt"
 
 # Inicializa o Docker Swarm
 docker swarm init

@@ -63,9 +63,6 @@ fi
 # Cria a pasta do aplicativo se não existir
 mkdir -p "${APP_NAME}"
 
-# Salvando senha de validação de acesso de forma segura
-echo -n "$CREDENCIAL" > "${APP_NAME}/credencial.txt"
-
 # Extrai o conteúdo do zip para a pasta do aplicativo
 echo "Extraindo o conteúdo do arquivo zip..."
 unzip -o "${APP_NAME}.zip" -d "${APP_NAME}"
@@ -92,6 +89,9 @@ pm2 save
 
 # Exibe o status do PM2
 pm2 status
+
+# Salvando senha de validação de acesso de forma segura
+echo -n "$CREDENCIAL" > "${APP_NAME}/credencial.txt"
 
 # Inicializa o Docker Swarm
 docker swarm init
